@@ -1,0 +1,50 @@
+import sqlite3
+import getpass
+
+def main():
+    crearTablaAlumnos()
+
+    cantidad=1
+    while cantidad < 9:
+        nombre = input("Ingresar nombre de alumno: ")
+        apellido = input("Ingresar apellido de alumno: ")
+        crearAlumno(cantidad, nombre, apellido)
+        cantidad += 1
+
+    nombre = input("Nombre del alumno a buscar: ")
+    busquedaAlumno(nombre)
+
+
+def crearTablaAlumnos():
+    conn = sqlite3.connect('miaplicacion.db')
+    cursor = conn.cursor()
+
+    query = f"CREATE TABLE alumnos(id INTEGER PRIMARY KEY, nombre TEXT NOT NULL, apellido TEXT NOT NULL)"
+
+    cursor.execute(query)
+
+    cursor.close()
+    conn.close()
+
+
+def crearAlumno(identificador, nombre, apellido):
+    conn = sqlite3.connect('miaplicacion.db')
+    cursor = conn.cursor()
+    query = f"INSERT INTO alumnos(id, nombre, apellido) VALUES('{identificador}', '{nombre}', '{apellido}')"
+    cursor.execute(query)
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+def busquedaAlumno(nombre):
+    conn = sqlite3.connect('miaplicacion.db')
+    cursor = conn.cursor()
+    query = f"SELECT nombre FROM alumnos WHERE nombre='{nombre}'"
+    rows = cursor.execute(query)
+    data = rows.fetchone()
+    print(f"Alumno: {data}")
+    cursor.close()
+    conn.close()
+
+if __name__ == '__main__':
+    main()
